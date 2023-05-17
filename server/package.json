@@ -11,6 +11,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.1.4",
+    "dotenv": "^16.0.3",
     "prisma": "^4.14.0",
     "tsx": "^3.12.7",
     "typescript": "^5.0.4"
