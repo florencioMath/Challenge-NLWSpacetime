@@ -57,8 +57,19 @@ export async function authRoutes(app: FastifyInstance) {
       });
     }
 
+    const token = app.jwt.sign(
+      {
+        name: user.name,
+        avatartURL: user.avatarURL,
+      },
+      {
+        sub: user.id,
+        expiresIn: '30 days',
+      }
+    );
+
     return {
-      user,
+      token,
     };
   });
 }
