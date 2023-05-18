@@ -1,15 +1,13 @@
 import { FastifyInstance } from 'fastify';
-import { prisma } from '../lib/prisma';
 import { z } from 'zod';
+import { prisma } from '../lib/prisma';
 
-export async function memoriesRoute(app: FastifyInstance) {
+export async function memoriesRoutes(app: FastifyInstance) {
   app.addHook('preHandler', async (request) => {
     await request.jwtVerify();
   });
 
   app.get('/memories', async (request) => {
-    await request.jwtVerify();
-
     const memories = await prisma.memory.findMany({
       where: {
         userId: request.user.sub,
@@ -22,7 +20,7 @@ export async function memoriesRoute(app: FastifyInstance) {
     return memories.map((memory) => {
       return {
         id: memory.id,
-        coverurl: memory.coverUrl,
+        coverUrl: memory.coverUrl,
         excerpt: memory.content.substring(0, 115).concat('...'),
       };
     });
@@ -125,7 +123,7 @@ export async function memoriesRoute(app: FastifyInstance) {
       return reply.status(401).send();
     }
 
-    await prisma.memory.findUniqueOrThrow({
+    await prisma.memory.delete({
       where: {
         id,
       },
