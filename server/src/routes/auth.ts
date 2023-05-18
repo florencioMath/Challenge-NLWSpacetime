@@ -12,13 +12,16 @@ export async function authRoutes(app: FastifyInstance) {
     const { code } = bodySchema.parse(request.body);
 
     const accessTokenResponse = await axios.post(
-      'https://github.com/login/oauth_token',
+      'https://github.com/login/oauth/access_token',
       null,
       {
         params: {
           client_id: process.env.GITHUB_CLIENT_ID,
           client_secret: process.env.GITHUB_CLIENT_SECRET,
           code,
+        },
+        headers: {
+          Accept: 'application/json',
         },
       }
     );
@@ -52,7 +55,7 @@ export async function authRoutes(app: FastifyInstance) {
           githubId: userInfo.id,
           login: userInfo.login,
           name: userInfo.name,
-          avatarURL: userInfo.avatar_url,
+          avatarUrl: userInfo.avatar_url,
         },
       });
     }
@@ -60,7 +63,7 @@ export async function authRoutes(app: FastifyInstance) {
     const token = app.jwt.sign(
       {
         name: user.name,
-        avatartURL: user.avatarURL,
+        avatarUrl: user.avatarUrl,
       },
       {
         sub: user.id,
